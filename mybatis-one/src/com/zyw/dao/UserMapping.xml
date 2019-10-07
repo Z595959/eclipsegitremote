@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 命名空间用来区分全局唯一性 -->
+<mapper namespace="com.zyw.dao.UserMapping">
+	<resultMap type="com.zyw.pojo.User" id="resultMap">
+			<id property="userid" column="userid"/>
+            <result property="user_name" column="user_name"/>
+            <result property="user_phone" column="user_phone"/>
+            <result property="user_password" column="user_password"/>
+            <result property="user_age" column="user_age"/>
+        <collection property="tright" column="tright_id" ofType="com.zyw.pojo.Tright">
+            <id property="trightid" column="trightid"/>
+        	<result property="tright_name" column="tright_name"/>
+        </collection>
+    </resultMap>
+	
+	<!-- 查询总数 -->
+	<select id="findUser"  resultMap="resultMap">
+		select u.*,t.tright_name from user u ,tright t where u.tright_id=t.trightid
+	</select>
+	
+	
+	<select id="list" parameterType="String" resultType="com.zyw.pojo.User">
+		select * from user
+	</select>
+	<!-- 查询所有-->
+	<!-- 多个参数，根据姓名模糊查询，指定性别，和角色对象入参 -->
+	<!-- 注意点，如果以对象入参，#{属性值}中的属性值，必须和pojo属性值一致 -->
+	<!--<select id="getUserByParams" resultType="com.zyw.pojo.User" parameterType="com.zyw.pojo.User">
+		select * from users 
+		where studentName like concat('%',#{studentName},'%')
+	</select>-->
+	
+	<!-- 使用map入参，适合传入的参数名与对象属性有不同的方法 -->
+	<!--<select id="getUserByMap" resultType="com.zyw.pojo.User" parameterType="java.util.Map">
+		select * from users
+		where studentName like concat('%',#{studentName},'%')
+		and passwords=#{passwords}
+	</select>-->
+	
+	<!-- 添加学生 -->
+	<insert id="addUser" parameterType="com.zyw.pojo.User">
+		insert into user (user_name,user_age,user_phone,user_home,user_password) values (#{user_name},#{user_age},#{user_phone},#{user_home},#{user_password})
+	</insert>
+	
+	<!-- 删除学生 -->
+	<delete id="deleteUser" parameterType="com.zyw.pojo.User">
+		delete from user where userid=#{userid}
+	</delete>
+	
+	<!-- 修改学生 -->
+	<update id="updateUser" parameterType="com.zyw.pojo.User">
+		update user set user_name=#{user_name},user_age=#{user_age},user_phone=#{user_phone},user_home=#{user_home},user_password=#{user_password} where userid=#{userid}
+	</update>
+	
+</mapper>
